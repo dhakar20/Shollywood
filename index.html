@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Shollywood - Official Site</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #000;
+      color: #fff;
+    }
+    header {
+      background: linear-gradient(to right, #ff0066, #6600ff);
+      padding: 40px 20px;
+      text-align: center;
+      font-size: 3rem;
+      font-weight: bold;
+      letter-spacing: 3px;
+      text-shadow: 2px 2px 15px #000;
+    }
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      background: #111;
+      padding: 10px 0;
+      position: sticky;
+      top: 0;
+      z-index: 999;
+    }
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: bold;
+      padding: 8px 16px;
+      border-radius: 6px;
+      transition: background 0.3s;
+    }
+    nav a:hover {
+      background: #222;
+    }
+    .hero {
+      text-align: center;
+      padding: 100px 20px;
+      background-image: url('https://images.unsplash.com/photo-1504384308090-c894fdcc538d');
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.7);
+      z-index: 1;
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+    }
+    .hero h1 {
+      font-size: 4rem;
+      margin: 0;
+      color: #ff3399;
+    }
+    .hero p {
+      margin-top: 20px;
+      font-size: 1.5rem;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .gallery-section {
+      padding: 40px 20px;
+    }
+    .gallery-section h2 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+      color: #ff66cc;
+    }
+    .scroll-gallery {
+      display: flex;
+      gap: 20px;
+      overflow-x: auto;
+      padding-bottom: 10px;
+    }
+    .scroll-gallery::-webkit-scrollbar {
+      height: 8px;
+    }
+    .scroll-gallery::-webkit-scrollbar-thumb {
+      background: #444;
+      border-radius: 10px;
+    }
+    .gallery-card {
+  width: 45vw;
+  max-width: 200px;
+  background: #111;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 0 10px #000;
+  flex-shrink: 0;
+  text-align: center;
+  cursor: pointer;
+}
+
+.gallery-card img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3 / 4; /* Keeps portrait shape */
+  object-fit: cover;
+  display: block;
+}
+    .gallery-card p {
+      padding: 10px;
+      font-weight: bold;
+      color: #eee;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      background: #111;
+      font-size: 0.9rem;
+      color: #888;
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      left: 0; top: 0; right: 0; bottom: 0;
+      background-color: rgba(0, 0, 0, 0.85);
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-content {
+      background: #111;
+      padding: 20px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+      color: #fff;
+      position: relative;
+    }
+    .modal-content img {
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+    }
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 20px;
+      color: #f66;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <header>🎬 SHOLLYWOOD</header>
+
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="join.html">Join</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Welcome to Shollywood</h1>
+      <p>More than just a name... Shollywood is a movement. A creative universe where stories, dreams, and talent collide into cinematic magic. 🎥✨</p>
+    </div>
+  </section>
+
+  <!-- Actors Section -->
+  <section class="gallery-section">
+    <h2>🎭 Actors</h2>
+    <div class="scroll-gallery">
+      <div class="gallery-card" onclick="openModal('dr.png', 'durgesh ji', 'Lead Actor in the film Manzil. Known for emotional depth.')">
+        <img src="dr.png" alt="durgesh ji">
+        <p>durgesh ji</p>
+      </div>
+      <div class="gallery-card" onclick="openModal('vi.png', 'vinod ji', 'Comedy king with perfect timing. Star of multiple short films.')">
+        <img src="vi.png" alt="vinod ji">
+        <p>vinod ji</p>
+      </div>
+      <div class="gallery-card" onclick="openModal('pr.jpg', 'manish ji', 'Comedy king with perfect timing. Star of multiple short films.')">
+  <img src="pr.jpg" alt="manish ji">
+  <p>manish ji</p>
+</div>
+      <div class="gallery-card" onclick="openModal('pu.jpg', 'puspa', 'Comedy king with perfect timing. Star of multiple short films.')">
+        <img src="pu.jpg" alt="puspa">
+        <p>puspa</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Directors Section -->
+  <section class="gallery-section">
+    <h2>🎬 Directors</h2>
+    <div class="scroll-gallery">
+      <div class="gallery-card" onclick="openModal('jony.png', 'jony dhakar', 'Director of Manzil. Visionary behind modern cinematic storytelling.')">
+        <img src="jony.png" alt="jony dhakar">
+        <p>jony dhakar</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cameramen Section -->
+  <section class="gallery-section">
+    <h2>📷 Cameramen</h2>
+    <div class="scroll-gallery">
+      <div class="gallery-card" onclick="openModal('sl.png', 'salman', 'Master behind the lens. Known for cinematic shots using mobile.')">
+        <img src="sl.png" alt="salman">
+        <p>salman</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- writer Section -->
+  <section class="gallery-section">
+    <h2>📝writers</h2>
+    <div class="scroll-gallery">
+      <div class="gallery-card" onclick="openModal('jony.png', 'jony', 'A passionate storyteller crafting tales that blend emotion, realism, and imagination. From short shayaris to full-length novels and screenplays, I write what the heart feels and the soul understands.')">
+        <img src="jony.png" alt="jony">
+        <p>jony dhakar</p>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Modal -->
+  <div class="modal" id="profileModal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModal()">&times;</span>
+      <img id="modalImage" src="" alt="">
+      <h2 id="modalName"></h2>
+      <p id="modalBio"></p>
+    </div>
+  </div>
+
+  <footer>
+    &copy; 2025 Shollywood | Created with ❤️ for the dreamers
+  </footer>
+
+  <!-- JavaScript -->
+  <script>
+    function openModal(image, name, bio) {
+      document.getElementById('modalImage').src = image;
+      document.getElementById('modalName').innerText = name;
+      document.getElementById('modalBio').innerText = bio;
+      document.getElementById('profileModal').style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('profileModal').style.display = 'none';
+    }
+  </script>
+</body>
+</html>
