@@ -1,266 +1,917 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Shollywood - Official Site</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: #000;
-      color: #fff;
-    }
-    header {
-      background: linear-gradient(to right, #ff0066, #6600ff);
-      padding: 40px 20px;
-      text-align: center;
-      font-size: 3rem;
-      font-weight: bold;
-      letter-spacing: 3px;
-      text-shadow: 2px 2px 15px #000;
-    }
-    nav {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      background: #111;
-      padding: 10px 0;
-      position: sticky;
-      top: 0;
-      z-index: 999;
-    }
-    nav a {
-      color: #fff;
-      text-decoration: none;
-      font-weight: bold;
-      padding: 8px 16px;
-      border-radius: 6px;
-      transition: background 0.3s;
-    }
-    nav a:hover {
-      background: #222;
-    }
-    .hero {
-      text-align: center;
-      padding: 100px 20px;
-      background-image: url('https://images.unsplash.com/photo-1504384308090-c894fdcc538d');
-      background-size: cover;
-      background-position: center;
-      position: relative;
-    }
-    .hero::after {
-      content: "";
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.7);
-      z-index: 1;
-    }
-    .hero-content {
-      position: relative;
-      z-index: 2;
-    }
-    .hero h1 {
-      font-size: 4rem;
-      margin: 0;
-      color: #ff3399;
-    }
-    .hero p {
-      margin-top: 20px;
-      font-size: 1.5rem;
-      max-width: 700px;
-      margin-left: auto;
-      margin-right: auto;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Management System</title>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- 
+        All CSS for the application is contained within this <style> block.
+        It uses CSS variables for theming (light/dark mode) and is fully responsive.
+    -->
+    <style>
+        /* Google Font Import */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-    .gallery-section {
-      padding: 40px 20px;
-    }
-    .gallery-section h2 {
-      font-size: 2rem;
-      margin-bottom: 20px;
-      color: #ff66cc;
-    }
-    .scroll-gallery {
-      display: flex;
-      gap: 20px;
-      overflow-x: auto;
-      padding-bottom: 10px;
-    }
-    .scroll-gallery::-webkit-scrollbar {
-      height: 8px;
-    }
-    .scroll-gallery::-webkit-scrollbar-thumb {
-      background: #444;
-      border-radius: 10px;
-    }
-    .gallery-card {
-  width: 45vw;
-  max-width: 200px;
-  background: #111;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 0 10px #000;
-  flex-shrink: 0;
-  text-align: center;
-  cursor: pointer;
-}
+        /* CSS Variables for Theming */
+        :root {
+            --bg-primary: #f3f4f6; /* gray-100 */
+            --bg-secondary: #ffffff; /* white */
+            --bg-tertiary: #e5e7eb; /* gray-200 */
+            --text-primary: #1f2937; /* gray-800 */
+            --text-secondary: #6b7280; /* gray-500 */
+            --border-color: #d1d5db; /* gray-300 */
+            --accent-color: #3b82f6; /* blue-500 */
+            --accent-hover: #2563eb; /* blue-600 */
+            --danger-color: #ef4444; /* red-500 */
+            --danger-hover: #dc2626; /* red-600 */
+            --success-color: #22c55e; /* green-500 */
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
 
-.gallery-card img {
-  width: 100%;
-  height: auto;
-  aspect-ratio: 3 / 4; /* Keeps portrait shape */
-  object-fit: cover;
-  display: block;
-}
-    .gallery-card p {
-      padding: 10px;
-      font-weight: bold;
-      color: #eee;
-    }
+        [data-theme='dark'] {
+            --bg-primary: #111827; /* gray-900 */
+            --bg-secondary: #1f2937; /* gray-800 */
+            --bg-tertiary: #374151; /* gray-700 */
+            --text-primary: #f9fafb; /* gray-50 */
+            --text-secondary: #9ca3af; /* gray-400 */
+            --border-color: #4b5563; /* gray-600 */
+        }
 
-    footer {
-      text-align: center;
-      padding: 30px;
-      background: #111;
-      font-size: 0.9rem;
-      color: #888;
-    }
+        /* General Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-    /* Modal */
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 9999;
-      left: 0; top: 0; right: 0; bottom: 0;
-      background-color: rgba(0, 0, 0, 0.85);
-      align-items: center;
-      justify-content: center;
-    }
-    .modal-content {
-      background: #111;
-      padding: 20px;
-      border-radius: 10px;
-      width: 90%;
-      max-width: 400px;
-      text-align: center;
-      color: #fff;
-      position: relative;
-    }
-    .modal-content img {
-      width: 100%;
-      height: auto;
-      border-radius: 10px;
-    }
-    .close-btn {
-      position: absolute;
-      top: 10px;
-      right: 15px;
-      font-size: 20px;
-      color: #f66;
-      cursor: pointer;
-    }
-  </style>
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            transition: background-color 0.3s, color 0.3s;
+            line-height: 1.5;
+        }
+
+        /* App Layout */
+        .app-container {
+            display: flex;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: var(--bg-secondary);
+            padding: 1.5rem 1rem;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid var(--border-color);
+            transition: width 0.3s, padding 0.3s;
+        }
+
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+            color: var(--accent-color);
+        }
+
+        .sidebar-header .logo-icon {
+            font-size: 1.75rem;
+            margin-right: 0.75rem;
+        }
+
+        .sidebar-header .logo-text {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-item a {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .nav-item a:hover {
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .nav-item a.active {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .nav-item a .icon {
+            width: 24px;
+            margin-right: 0.75rem;
+            text-align: center;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        /* Page Sections */
+        .page {
+            display: none;
+        }
+        .page.active {
+            display: block;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+        
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        /* Components: Cards, Buttons, Forms */
+        .card {
+            background-color: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 1.5rem;
+        }
+
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .summary-card {
+            display: flex;
+            align-items: center;
+        }
+
+        .summary-card .icon-container {
+            padding: 1rem;
+            border-radius: 50%;
+            margin-right: 1rem;
+            font-size: 1.5rem;
+            color: white;
+        }
+        .summary-card .icon-container.blue { background-color: #3b82f6; }
+        .summary-card .icon-container.green { background-color: #22c55e; }
+        .summary-card .icon-container.red { background-color: #ef4444; }
+        
+        .summary-card .info p { color: var(--text-secondary); }
+        .summary-card .info .value { font-size: 1.75rem; font-weight: 700; color: var(--text-primary); }
+
+        .btn {
+            padding: 0.65rem 1.25rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+        .btn:active { transform: scale(0.98); }
+        .btn-primary { background-color: var(--accent-color); color: white; }
+        .btn-primary:hover { background-color: var(--accent-hover); }
+        .btn-danger { background-color: var(--danger-color); color: white; }
+        .btn-danger:hover { background-color: var(--danger-hover); }
+        .btn-secondary { background-color: var(--bg-tertiary); color: var(--text-primary); }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+        }
+        
+        textarea.form-control {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        /* Table Styles */
+        .table-container {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+        th, td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        thead {
+            background-color: var(--bg-tertiary);
+        }
+        tbody tr:hover {
+            background-color: var(--bg-tertiary);
+        }
+        .pending-fees-row {
+            background-color: rgba(239, 68, 68, 0.1);
+        }
+        [data-theme='dark'] .pending-fees-row {
+            background-color: rgba(239, 68, 68, 0.2);
+        }
+
+        .action-btns .btn { padding: 0.25rem 0.5rem; margin-right: 0.5rem; font-size: 0.875rem; }
+
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .modal.active {
+            display: flex;
+        }
+        .modal-content {
+            background-color: var(--bg-secondary);
+            padding: 2rem;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .modal-header .close-btn { font-size: 1.5rem; cursor: pointer; border: none; background: none; color: var(--text-secondary); }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .app-container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                height: auto;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+                padding: 0.5rem 1rem;
+            }
+            .sidebar-header {
+                margin-bottom: 0;
+            }
+            .nav-menu {
+                display: flex;
+            }
+            .nav-item a {
+                padding: 0.5rem;
+                margin: 0 0.25rem;
+            }
+            .nav-item a .text {
+                display: none; /* Hide text on small screens */
+            }
+            .main-content {
+                padding: 1rem;
+            }
+            h1 {
+                font-size: 1.5rem;
+            }
+        }
+        
+        /* Print Styles */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            .sidebar, .main-content > *:not(#reports-page), #reports-page > *:not(.printable), .no-print {
+                display: none !important;
+            }
+            .printable, .printable * {
+                visibility: visible;
+            }
+            .printable {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                padding: 20px;
+            }
+            .card {
+                box-shadow: none;
+                border: 1px solid #ccc;
+            }
+        }
+        .print-header {
+            display: none;
+        }
+        @media print {
+            .print-header {
+                display: block;
+                text-align: center;
+                margin-bottom: 2rem;
+            }
+        }
+
+    </style>
 </head>
-<body>
-  <header>🎬 SHOLLYWOOD</header>
+<body data-theme="light">
 
-  <nav>
-    <a href="index.html">Home</a>
-    <a href="about.html">About</a>
-    <a href="join.html">Join</a>
-    <a href="contact.html">Contact</a>
-  </nav>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <i class="fas fa-book-reader logo-icon"></i>
+                <span class="logo-text">LibrarySys</span>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#dashboard" class="nav-link active">
+                        <i class="fas fa-tachometer-alt icon"></i><span class="text">Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#students" class="nav-link">
+                        <i class="fas fa-users icon"></i><span class="text">Students</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#reports" class="nav-link">
+                        <i class="fas fa-chart-pie icon"></i><span class="text">Reports</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#settings" class="nav-link">
+                        <i class="fas fa-cog icon"></i><span class="text">Settings</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
 
-  <section class="hero">
-    <div class="hero-content">
-      <h1>Welcome to Shollywood</h1>
-      <p>More than just a name... Shollywood is a movement. A creative universe where stories, dreams, and talent collide into cinematic magic. 🎥✨</p>
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Dashboard Page -->
+            <section id="dashboard-page" class="page active">
+                <h1>Dashboard</h1>
+                <div class="summary-cards">
+                    <div class="card summary-card">
+                        <div class="icon-container blue"><i class="fas fa-users"></i></div>
+                        <div class="info">
+                            <p>Total Students</p>
+                            <div id="total-students" class="value">0</div>
+                        </div>
+                    </div>
+                    <div class="card summary-card">
+                        <div class="icon-container green"><i class="fas fa-dollar-sign"></i></div>
+                        <div class="info">
+                            <p>Fees Collected</p>
+                            <div id="total-fees-collected" class="value">₹0</div>
+                        </div>
+                    </div>
+                    <div class="card summary-card">
+                        <div class="icon-container red"><i class="fas fa-exclamation-triangle"></i></div>
+                        <div class="info">
+                            <p>Pending Dues</p>
+                            <div id="total-pending-dues" class="value">₹0</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Students Page -->
+            <section id="students-page" class="page">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h1>Students</h1>
+                    <button id="add-student-btn" class="btn btn-primary"><i class="fas fa-plus"></i> Add Student</button>
+                </div>
+                <div class="card">
+                    <h2>Filter & Search</h2>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                        <input type="text" id="search-input" class="form-control" placeholder="Search by name, contact...">
+                        <select id="filter-shift" class="form-control">
+                            <option value="all">All Shifts</option>
+                            <option value="Morning">Morning</option>
+                            <option value="Evening">Evening</option>
+                        </select>
+                        <input type="number" id="filter-table" class="form-control" placeholder="Filter by Table No.">
+                    </div>
+                </div>
+                <div class="card table-container">
+                    <table id="students-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Contact</th>
+                                <th>Shift</th>
+                                <th>Table No.</th>
+                                <th>Fees Paid</th>
+                                <th>Fees Due</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Student rows will be inserted here by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Reports Page -->
+            <section id="reports-page" class="page">
+                <div class="no-print" style="display: flex; justify-content: space-between; align-items: center;">
+                    <h1>Reports</h1>
+                    <button id="print-report-btn" class="btn btn-primary"><i class="fas fa-print"></i> Print Report</button>
+                </div>
+                
+                <div class="printable">
+                    <div class="print-header">
+                        <h1>Library Fee Report</h1>
+                        <p id="report-date"></p>
+                    </div>
+                    <div class="card">
+                        <h2>Shift-wise Summary</h2>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <div>
+                                <h3>Morning Shift</h3>
+                                <p>Total Students: <strong id="morning-students">0</strong></p>
+                                <p>Fees Collected: <strong id="morning-fees">₹0</strong></p>
+                                <p>Pending Dues: <strong id="morning-dues">₹0</strong></p>
+                            </div>
+                            <div>
+                                <h3>Evening Shift</h3>
+                                <p>Total Students: <strong id="evening-students">0</strong></p>
+                                <p>Fees Collected: <strong id="evening-fees">₹0</strong></p>
+                                <p>Pending Dues: <strong id="evening-dues">₹0</strong></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card table-container">
+                        <h2>Students with Pending Fees</h2>
+                        <table id="pending-fees-table">
+                            <thead>
+                                <tr><th>Name</th><th>Contact</th><th>Shift</th><th>Fees Due</th></tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Settings Page -->
+            <section id="settings-page" class="page">
+                <h1>Settings</h1>
+                <div class="card">
+                    <h2>Appearance</h2>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <p>Toggle Dark/Light Mode</p>
+                        <button id="theme-toggle-btn" class="btn btn-secondary">Toggle Theme</button>
+                    </div>
+                </div>
+                <div class="card">
+                    <h2>Data Management</h2>
+                    <div style="display: flex; flex-direction: column; gap: 1rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p>Export all data as a JSON file.</p>
+                            <button id="export-data-btn" class="btn btn-primary">Export Data</button>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p>Import data from a JSON file.</p>
+                            <label for="import-data-input" class="btn btn-primary" style="cursor: pointer;">Import Data</label>
+                            <input type="file" id="import-data-input" accept=".json" style="display: none;">
+                        </div>
+                    </div>
+                </div>
+                 <div class="card">
+                    <h2>Danger Zone</h2>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <p>Permanently delete all data.</p>
+                        <button id="clear-data-btn" class="btn btn-danger">Clear All Data</button>
+                    </div>
+                </div>
+            </section>
+        </main>
     </div>
-  </section>
 
-  <!-- Actors Section -->
-  <section class="gallery-section">
-    <h2>🎭 Actors</h2>
-    <div class="scroll-gallery">
-      <div class="gallery-card" onclick="openModal('dr.png', 'durgesh ji', 'Lead Actor in the film Manzil. Known for emotional depth.')">
-        <img src="dr.png" alt="durgesh ji">
-        <p>durgesh ji</p>
-      </div>
-      <div class="gallery-card" onclick="openModal('vi.png', 'vinod ji', 'Comedy king with perfect timing. Star of multiple short films.')">
-        <img src="vi.png" alt="vinod ji">
-        <p>vinod ji</p>
-      </div>
-      <div class="gallery-card" onclick="openModal('pr.jpg', 'manish ji', 'Comedy king with perfect timing. Star of multiple short films.')">
-  <img src="pr.jpg" alt="manish ji">
-  <p>manish ji</p>
-</div>
-      <div class="gallery-card" onclick="openModal('pu.jpg', 'puspa', 'Comedy king with perfect timing. Star of multiple short films.')">
-        <img src="pu.jpg" alt="puspa">
-        <p>puspa</p>
-      </div>
+    <!-- Student Form Modal -->
+    <div id="student-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">Add Student</h2>
+                <button class="close-btn">&times;</button>
+            </div>
+            <form id="student-form">
+                <input type="hidden" id="student-id">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="contact">Contact</label>
+                        <input type="tel" id="contact" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="shift">Shift</label>
+                        <select id="shift" class="form-control" required>
+                            <option value="Morning">Morning</option>
+                            <option value="Evening">Evening</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="table-number">Table Number</label>
+                        <input type="number" id="table-number" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fees-paid">Fees Paid (₹)</label>
+                        <input type="number" id="fees-paid" class="form-control" value="0" required>
+                    </div>
+                     <div class="form-group">
+                        <label for="fees-due">Fees Due (₹)</label>
+                        <input type="number" id="fees-due" class="form-control" value="0" required>
+                    </div>
+                </div>
+                 <div class="form-group">
+                    <label for="notes">Notes</label>
+                    <textarea id="notes" class="form-control"></textarea>
+                </div>
+                <div style="text-align: right; margin-top: 1.5rem;">
+                    <button type="button" class="btn btn-secondary close-btn" style="margin-right: 0.5rem;">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Student</button>
+                </div>
+            </form>
+        </div>
     </div>
-  </section>
-
-  <!-- Directors Section -->
-  <section class="gallery-section">
-    <h2>🎬 Directors</h2>
-    <div class="scroll-gallery">
-      <div class="gallery-card" onclick="openModal('jony.png', 'jony dhakar', 'Director of Manzil. Visionary behind modern cinematic storytelling.')">
-        <img src="jony.png" alt="jony dhakar">
-        <p>jony dhakar</p>
-      </div>
+    
+    <!-- Confirmation Modal -->
+    <div id="confirm-modal" class="modal">
+        <div class="modal-content" style="max-width: 400px;">
+             <h2 id="confirm-title">Are you sure?</h2>
+             <p id="confirm-text" style="margin-bottom: 1.5rem;">This action cannot be undone.</p>
+             <div style="text-align: right;">
+                <button id="confirm-cancel-btn" class="btn btn-secondary" style="margin-right: 0.5rem;">Cancel</button>
+                <button id="confirm-ok-btn" class="btn btn-danger">OK</button>
+             </div>
+        </div>
     </div>
-  </section>
 
-  <!-- Cameramen Section -->
-  <section class="gallery-section">
-    <h2>📷 Cameramen</h2>
-    <div class="scroll-gallery">
-      <div class="gallery-card" onclick="openModal('sl.png', 'salman', 'Master behind the lens. Known for cinematic shots using mobile.')">
-        <img src="sl.png" alt="salman">
-        <p>salman</p>
-      </div>
-    </div>
-  </section>
 
-  <!-- writer Section -->
-  <section class="gallery-section">
-    <h2>📝writers</h2>
-    <div class="scroll-gallery">
-      <div class="gallery-card" onclick="openModal('jony.png', 'jony', 'A passionate storyteller crafting tales that blend emotion, realism, and imagination. From short shayaris to full-length novels and screenplays, I write what the heart feels and the soul understands.')">
-        <img src="jony.png" alt="jony">
-        <p>jony dhakar</p>
-      </div>
-    </div>
-  </section>
-  
-  <!-- Modal -->
-  <div class="modal" id="profileModal">
-    <div class="modal-content">
-      <span class="close-btn" onclick="closeModal()">&times;</span>
-      <img id="modalImage" src="" alt="">
-      <h2 id="modalName"></h2>
-      <p id="modalBio"></p>
-    </div>
-  </div>
+    <!-- 
+        All JavaScript for the application is contained within this <script> block.
+        It handles page navigation, data management with localStorage, rendering content,
+        and all user interactions.
+    -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
 
-  <footer>
-    &copy; 2025 Shollywood | Created with ❤️ for the dreamers
-  </footer>
+            // --- STATE MANAGEMENT (using localStorage) ---
+            const AppState = {
+                // Retrieves students from localStorage, returns empty array if none.
+                getStudents: () => {
+                    return JSON.parse(localStorage.getItem('students')) || [];
+                },
+                // Saves the provided array of students to localStorage.
+                saveStudents: (students) => {
+                    localStorage.setItem('students', JSON.stringify(students));
+                },
+                // Retrieves theme from localStorage, defaults to 'light'.
+                getTheme: () => {
+                    return localStorage.getItem('theme') || 'light';
+                },
+                // Saves the theme preference to localStorage.
+                saveTheme: (theme) => {
+                    localStorage.setItem('theme', theme);
+                }
+            };
 
-  <!-- JavaScript -->
-  <script>
-    function openModal(image, name, bio) {
-      document.getElementById('modalImage').src = image;
-      document.getElementById('modalName').innerText = name;
-      document.getElementById('modalBio').innerText = bio;
-      document.getElementById('profileModal').style.display = 'flex';
-    }
+            // --- UI SELECTORS ---
+            const navLinks = document.querySelectorAll('.nav-link');
+            const pages = document.querySelectorAll('.page');
+            const studentModal = document.getElementById('student-modal');
+            const studentForm = document.getElementById('student-form');
+            const confirmModal = document.getElementById('confirm-modal');
 
-    function closeModal() {
-      document.getElementById('profileModal').style.display = 'none';
-    }
-  </script>
+            // --- NAVIGATION ---
+            // Function to show a page and hide others.
+            const showPage = (pageId) => {
+                pages.forEach(page => page.classList.remove('active'));
+                document.getElementById(`${pageId}-page`).classList.add('active');
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === `#${pageId}`) {
+                        link.classList.add('active');
+                    }
+                });
+            };
+
+            // Event listeners for navigation links.
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const pageId = link.getAttribute('href').substring(1);
+                    showPage(pageId);
+                });
+            });
+
+            // --- MODAL HANDLING ---
+            const openModal = (modal) => modal.classList.add('active');
+            const closeModal = (modal) => modal.classList.remove('active');
+
+            document.getElementById('add-student-btn').addEventListener('click', () => {
+                studentForm.reset();
+                document.getElementById('student-id').value = '';
+                document.getElementById('modal-title').textContent = 'Add Student';
+                openModal(studentModal);
+            });
+            
+            studentModal.querySelectorAll('.close-btn').forEach(btn => btn.addEventListener('click', () => closeModal(studentModal)));
+            confirmModal.querySelectorAll('#confirm-cancel-btn').forEach(btn => btn.addEventListener('click', () => closeModal(confirmModal)));
+
+            // --- DATA RENDERING ---
+            // Renders the summary cards on the dashboard.
+            const renderDashboard = () => {
+                const students = AppState.getStudents();
+                const totalStudents = students.length;
+                const feesCollected = students.reduce((sum, s) => sum + (s.feesPaid || 0), 0);
+                const pendingDues = students.reduce((sum, s) => sum + (s.feesDue || 0), 0);
+
+                document.getElementById('total-students').textContent = totalStudents;
+                document.getElementById('total-fees-collected').textContent = `₹${feesCollected.toLocaleString()}`;
+                document.getElementById('total-pending-dues').textContent = `₹${pendingDues.toLocaleString()}`;
+            };
+            
+            // Renders the students table based on current filters.
+            const renderStudentsTable = () => {
+                const students = AppState.getStudents();
+                const searchTerm = document.getElementById('search-input').value.toLowerCase();
+                const shiftFilter = document.getElementById('filter-shift').value;
+                const tableFilter = document.getElementById('filter-table').value;
+                const tableBody = document.querySelector('#students-table tbody');
+
+                const filteredStudents = students.filter(s => {
+                    const matchesSearch = s.name.toLowerCase().includes(searchTerm) || s.contact.includes(searchTerm);
+                    const matchesShift = shiftFilter === 'all' || s.shift === shiftFilter;
+                    const matchesTable = !tableFilter || s.tableNumber.toString() === tableFilter;
+                    return matchesSearch && matchesShift && matchesTable;
+                });
+                
+                if (filteredStudents.length === 0) {
+                    tableBody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding: 2rem;">No students found.</td></tr>`;
+                    return;
+                }
+
+                tableBody.innerHTML = filteredStudents.map(s => `
+                    <tr class="${s.feesDue > 0 ? 'pending-fees-row' : ''}">
+                        <td>${s.name}</td>
+                        <td>${s.contact}</td>
+                        <td>${s.shift}</td>
+                        <td>${s.tableNumber}</td>
+                        <td style="color: var(--success-color);">₹${s.feesPaid.toLocaleString()}</td>
+                        <td style="color: var(--danger-color);">₹${s.feesDue.toLocaleString()}</td>
+                        <td class="action-btns">
+                            <button class="btn btn-secondary edit-btn" data-id="${s.id}"><i class="fas fa-pencil-alt"></i></button>
+                            <button class="btn btn-danger delete-btn" data-id="${s.id}"><i class="fas fa-trash-alt"></i></button>
+                        </td>
+                    </tr>
+                `).join('');
+            };
+            
+            // Renders the reports page data.
+            const renderReports = () => {
+                const students = AppState.getStudents();
+                
+                // Shift Summaries
+                const morning = students.filter(s => s.shift === 'Morning');
+                const evening = students.filter(s => s.shift === 'Evening');
+                document.getElementById('morning-students').textContent = morning.length;
+                document.getElementById('morning-fees').textContent = `₹${morning.reduce((s,c)=>s+c.feesPaid,0).toLocaleString()}`;
+                document.getElementById('morning-dues').textContent = `₹${morning.reduce((s,c)=>s+c.feesDue,0).toLocaleString()}`;
+                document.getElementById('evening-students').textContent = evening.length;
+                document.getElementById('evening-fees').textContent = `₹${evening.reduce((s,c)=>s+c.feesPaid,0).toLocaleString()}`;
+                document.getElementById('evening-dues').textContent = `₹${evening.reduce((s,c)=>s+c.feesDue,0).toLocaleString()}`;
+                
+                // Pending Fees Table
+                const pending = students.filter(s => s.feesDue > 0);
+                const tableBody = document.querySelector('#pending-fees-table tbody');
+                if (pending.length === 0) {
+                    tableBody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding: 2rem;">No pending dues found.</td></tr>`;
+                } else {
+                    tableBody.innerHTML = pending.map(s => `
+                        <tr>
+                            <td>${s.name}</td>
+                            <td>${s.contact}</td>
+                            <td>${s.shift}</td>
+                            <td style="color: var(--danger-color);">₹${s.feesDue.toLocaleString()}</td>
+                        </tr>
+                    `).join('');
+                }
+                document.getElementById('report-date').textContent = `Generated on: ${new Date().toLocaleDateString()}`;
+            };
+            
+            // Main render function to update all dynamic parts of the UI.
+            const renderAll = () => {
+                renderDashboard();
+                renderStudentsTable();
+                renderReports();
+            };
+
+            // --- EVENT LISTENERS ---
+
+            // Student Form Submission (Add/Edit)
+            studentForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                let students = AppState.getStudents();
+                const studentId = document.getElementById('student-id').value;
+                
+                const studentData = {
+                    id: studentId || Date.now().toString(),
+                    name: document.getElementById('name').value,
+                    contact: document.getElementById('contact').value,
+                    shift: document.getElementById('shift').value,
+                    tableNumber: parseInt(document.getElementById('table-number').value),
+                    feesPaid: parseFloat(document.getElementById('fees-paid').value),
+                    feesDue: parseFloat(document.getElementById('fees-due').value),
+                    notes: document.getElementById('notes').value
+                };
+
+                if (studentId) { // Editing existing student
+                    const index = students.findIndex(s => s.id === studentId);
+                    if (index > -1) students[index] = studentData;
+                } else { // Adding new student
+                    students.push(studentData);
+                }
+
+                AppState.saveStudents(students);
+                renderAll();
+                closeModal(studentModal);
+            });
+            
+            // Edit and Delete button clicks in students table
+            document.getElementById('students-table').addEventListener('click', (e) => {
+                const editBtn = e.target.closest('.edit-btn');
+                const deleteBtn = e.target.closest('.delete-btn');
+                
+                if (editBtn) {
+                    const studentId = editBtn.dataset.id;
+                    const student = AppState.getStudents().find(s => s.id === studentId);
+                    if (!student) return;
+
+                    document.getElementById('student-id').value = student.id;
+                    document.getElementById('name').value = student.name;
+                    document.getElementById('contact').value = student.contact;
+                    document.getElementById('shift').value = student.shift;
+                    document.getElementById('table-number').value = student.tableNumber;
+                    document.getElementById('fees-paid').value = student.feesPaid;
+                    document.getElementById('fees-due').value = student.feesDue;
+                    document.getElementById('notes').value = student.notes;
+                    
+                    document.getElementById('modal-title').textContent = 'Edit Student';
+                    openModal(studentModal);
+                }
+                
+                if (deleteBtn) {
+                    const studentId = deleteBtn.dataset.id;
+                    showConfirmation('Delete Student?', 'This will permanently delete the student record.', () => {
+                        let students = AppState.getStudents();
+                        students = students.filter(s => s.id !== studentId);
+                        AppState.saveStudents(students);
+                        renderAll();
+                    });
+                }
+            });
+            
+            // Filters for students table
+            ['search-input', 'filter-shift', 'filter-table'].forEach(id => {
+                document.getElementById(id).addEventListener('input', renderStudentsTable);
+            });
+            
+            // Print Report Button
+            document.getElementById('print-report-btn').addEventListener('click', () => window.print());
+
+            // --- SETTINGS PAGE LOGIC ---
+            // Theme Toggle
+            const themeToggleBtn = document.getElementById('theme-toggle-btn');
+            const applyTheme = (theme) => {
+                document.body.dataset.theme = theme;
+                themeToggleBtn.textContent = theme === 'light' ? 'Switch to Dark' : 'Switch to Light';
+            };
+
+            themeToggleBtn.addEventListener('click', () => {
+                const newTheme = AppState.getTheme() === 'light' ? 'dark' : 'light';
+                AppState.saveTheme(newTheme);
+                applyTheme(newTheme);
+            });
+            
+            // Data Export
+            document.getElementById('export-data-btn').addEventListener('click', () => {
+                const students = AppState.getStudents();
+                const dataStr = JSON.stringify(students, null, 2);
+                const blob = new Blob([dataStr], {type: "application/json"});
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `library-students-backup-${new Date().toISOString().split('T')[0]}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+            });
+            
+            // Data Import
+            document.getElementById('import-data-input').addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    try {
+                        const importedData = JSON.parse(event.target.result);
+                        if (!Array.isArray(importedData)) throw new Error();
+                        showConfirmation('Import Data?', 'This will overwrite all current data. Are you sure?', () => {
+                            AppState.saveStudents(importedData);
+                            renderAll();
+                            alert('Data imported successfully!');
+                        });
+                    } catch {
+                        alert('Invalid file format. Please import a valid JSON file.');
+                    } finally {
+                        e.target.value = null; // Reset input
+                    }
+                };
+                reader.readAsText(file);
+            });
+            
+            // Clear All Data
+            document.getElementById('clear-data-btn').addEventListener('click', () => {
+                 showConfirmation('Clear All Data?', 'This will permanently delete ALL student data. This action cannot be undone.', () => {
+                    AppState.saveStudents([]);
+                    renderAll();
+                    alert('All data has been cleared.');
+                });
+            });
+            
+            // Generic Confirmation Modal
+            const showConfirmation = (title, text, onConfirm) => {
+                document.getElementById('confirm-title').textContent = title;
+                document.getElementById('confirm-text').textContent = text;
+                
+                const okBtn = document.getElementById('confirm-ok-btn');
+                
+                // Clone and replace button to remove old event listeners
+                const newOkBtn = okBtn.cloneNode(true);
+                okBtn.parentNode.replaceChild(newOkBtn, okBtn);
+                
+                newOkBtn.addEventListener('click', () => {
+                    onConfirm();
+                    closeModal(confirmModal);
+                }, { once: true }); // Ensure the event listener runs only once
+
+                openModal(confirmModal);
+            };
+
+            // --- INITIALIZATION ---
+            const init = () => {
+                const initialTheme = AppState.getTheme();
+                applyTheme(initialTheme);
+                showPage('dashboard');
+                renderAll();
+            };
+
+            init();
+        });
+    </script>
+
 </body>
 </html>
+
