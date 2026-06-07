@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Business Empire: RichMan+</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold: #F5C842;
+  --gold-dark: #B8930A;
+  --green: #00C87A;
+  --green-dark: #007A4A;
+  --red: #FF4757;
+  --blue: #3D8EFF;
+  --purple: #9B6DFF;
+  --bg: #0A0C10;
+  --bg2: #12151C;
+  --bg3: #1A1E28;
+  --bg4: #222739;
+  --border: rgba(255,255,255,0.07);
+  --text: #F0F2F8;
+  --muted: #6B7280;
+  --card-radius: 16px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* BG pattern */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: radial-gradient(circle at 20% 20%, rgba(61,142,255,0.06) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(245,200,66,0.05) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.game-shell {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 1;
+}
+
+/* HEADER */
+.header {
+  padding: 16px 16px 0;
+}
+.header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+.game-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  letter-spacing: 2px;
+  color: var(--gold);
+}
+.level-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--gold);
+}
+.level-badge span { color: var(--muted); font-size: 11px; }
+
+/* MONEY CARD */
+.money-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--card-radius);
+  padding: 16px;
+  margin-bottom: 10px;
+  position: relative;
+  overflow: hidden;
+}
+.money-card::after {
+  content: '$';
+  position: absolute;
+  right: -10px;
+  top: -20px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 120px;
+  color: rgba(245,200,66,0.04);
+  pointer-events: none;
+}
+.money-main {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 42px;
+  letter-spacing: 1px;
+  color: var(--gold);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.money-sub {
+  font-size: 12px;
+  color: var(--muted);
+  display: flex;
+  gap: 14px;
+}
+.money-sub .inc { color: var(--green); font-weight: 500; }
+
+/* STATS ROW */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin-bottom: 10px;
+}
+.stat-pill {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 8px 6px;
+  text-align: center;
+}
+.stat-pill .val {
+  font-family: 'DM Mono', monospace;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+}
+.stat-pill .lbl { font-size: 10px; color: var(--muted); margin-top: 1px; }
+
+/* XP BAR */
+.xp-wrap {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.xp-label { font-size: 11px; color: var(--muted); white-space: nowrap; }
+.xp-bar-track { flex: 1; height: 5px; background: var(--bg4); border-radius: 3px; overflow: hidden; }
+.xp-bar-fill { height: 100%; background: var(--purple); border-radius: 3px; transition: width 0.4s; }
+.xp-val { font-size: 11px; color: var(--purple); font-family: 'DM Mono', monospace; white-space: nowrap; }
+
+/* REP BAR */
+.rep-wrap {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.rep-bar-track { flex: 1; height: 5px; background: var(--bg4); border-radius: 3px; overflow: hidden; }
+.rep-bar-fill { height: 100%; background: var(--gold); border-radius: 3px; transition: width 0.5s; }
+.rep-title { font-size: 11px; color: var(--gold); white-space: nowrap; }
+
+/* TABS */
+.tabs-wrap {
+  display: flex;
+  gap: 4px;
+  padding: 0 16px;
+  margin-bottom: 10px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tabs-wrap::-webkit-scrollbar { display: none; }
+.tab-btn {
+  padding: 7px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: var(--bg2);
+  color: var(--muted);
+  white-space: nowrap;
+  transition: all 0.2s;
+  font-family: 'DM Sans', sans-serif;
+}
+.tab-btn.active {
+  background: var(--gold);
+  color: #0A0C10;
+  border-color: var(--gold);
+}
+
+/* PANELS */
+.panels { flex: 1; padding: 0 16px 100px; }
+.panel { display: none; animation: fadeIn 0.2s; }
+.panel.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+/* BUSINESS CARD */
+.biz-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--card-radius);
+  padding: 14px;
+  margin-bottom: 8px;
+  transition: border-color 0.2s;
+}
+.biz-card:has(.buy-btn:not([disabled]):hover) { border-color: rgba(245,200,66,0.3); }
+.biz-head { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+.biz-emoji {
+  width: 44px; height: 44px;
+  background: var(--bg3);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+.biz-name { font-size: 14px; font-weight: 600; color: var(--text); }
+.biz-income { font-size: 11px; color: var(--green); margin-top: 2px; font-family: 'DM Mono', monospace; }
+.biz-desc { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.biz-bottom { display: flex; align-items: center; gap: 8px; }
+.prog-track { flex: 1; height: 4px; background: var(--bg4); border-radius: 2px; overflow: hidden; }
+.prog-fill { height: 100%; background: var(--blue); border-radius: 2px; transition: width 0.3s; }
+.lv-tag { font-size: 10px; color: var(--blue); font-family: 'DM Mono', monospace; white-space: nowrap; }
+
+/* BUTTONS */
+.buy-btn, .action-btn {
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  font-family: 'DM Sans', sans-serif;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.buy-btn { background: var(--gold); color: #0A0C10; }
+.buy-btn:hover:not([disabled]) { background: #FFD94A; transform: scale(1.03); }
+.buy-btn[disabled] { background: var(--bg4); color: var(--muted); cursor: not-allowed; }
+.action-btn.green { background: var(--green); color: #fff; }
+.action-btn.green:hover { background: #00E88C; }
+.action-btn.red { background: var(--red); color: #fff; }
+.action-btn.red:hover { background: #FF6470; }
+.action-btn.blue { background: var(--blue); color: #fff; }
+.action-btn.blue:hover { background: #5FA3FF; }
+.action-btn.purple { background: var(--purple); color: #fff; }
+.action-btn[disabled] { background: var(--bg4); color: var(--muted); cursor: not-allowed; }
+.wide-btn { width: 100%; padding: 12px; font-size: 14px; border-radius: 10px; border: none; cursor: pointer; font-family: 'DM Sans', sans-serif; font-weight: 600; transition: all 0.15s; }
+
+/* STOCK */
+.stock-table { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--card-radius); overflow: hidden; margin-bottom: 10px; }
+.stock-row { display: flex; align-items: center; gap: 8px; padding: 12px 14px; border-bottom: 1px solid var(--border); }
+.stock-row:last-child { border-bottom: none; }
+.stock-name { font-size: 13px; font-weight: 600; color: var(--text); flex: 1; }
+.stock-ticker { font-size: 10px; color: var(--muted); margin-top: 1px; font-family: 'DM Mono', monospace; }
+.stock-price { font-size: 13px; font-family: 'DM Mono', monospace; font-weight: 500; min-width: 60px; text-align: right; }
+.stock-chg { font-size: 10px; font-family: 'DM Mono', monospace; min-width: 48px; text-align: right; }
+.stock-owned { font-size: 10px; color: var(--muted); min-width: 36px; text-align: center; }
+.up { color: var(--green); }
+.dn { color: var(--red); }
+.stock-btns { display: flex; gap: 4px; }
+
+/* PORTFOLIO */
+.port-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--card-radius); padding: 14px; margin-bottom: 10px; }
+.port-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+.port-stat { background: var(--bg3); border-radius: 10px; padding: 10px; text-align: center; }
+.port-val { font-size: 18px; font-weight: 600; font-family: 'DM Mono', monospace; color: var(--gold); }
+.port-lbl { font-size: 10px; color: var(--muted); margin-top: 2px; }
+
+/* SKILL */
+.skill-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--card-radius); padding: 14px; margin-bottom: 8px; }
+.skill-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.skill-name { font-size: 14px; font-weight: 600; }
+.skill-desc { font-size: 11px; color: var(--muted); margin-bottom: 8px; }
+.skill-lv { display: flex; gap: 3px; margin-bottom: 10px; }
+.lv-dot { width: 20px; height: 5px; border-radius: 3px; background: var(--bg4); transition: background 0.3s; }
+.lv-dot.filled { background: var(--purple); }
+
+/* CITY CARD */
+.city-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--card-radius);
+  padding: 14px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: border-color 0.2s;
+}
+.city-card.active-city { border-color: var(--gold); }
+.city-flag { font-size: 28px; }
+.city-info { flex: 1; }
+.city-name { font-size: 14px; font-weight: 600; }
+.city-bonus { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.city-badge { font-size: 10px; background: rgba(245,200,66,0.15); color: var(--gold); border-radius: 6px; padding: 2px 8px; white-space: nowrap; }
+
+/* EVENT CARD */
+.event-card {
+  border-radius: var(--card-radius);
+  padding: 16px;
+  margin-bottom: 10px;
+  border: 1px solid;
+  animation: pulseIn 0.4s ease;
+}
+@keyframes pulseIn { from { transform: scale(0.97); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.event-card.good { background: rgba(0,200,122,0.08); border-color: rgba(0,200,122,0.3); }
+.event-card.bad { background: rgba(255,71,87,0.08); border-color: rgba(255,71,87,0.3); }
+.event-card.neutral { background: rgba(61,142,255,0.08); border-color: rgba(61,142,255,0.3); }
+.event-icon { font-size: 28px; margin-bottom: 8px; }
+.event-title { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+.event-desc { font-size: 12px; color: var(--muted); margin-bottom: 12px; line-height: 1.5; }
+.event-btns { display: flex; gap: 8px; }
+
+/* LOG */
+.log-entry { padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 12px; display: flex; gap: 8px; }
+.log-entry:last-child { border-bottom: none; }
+.log-time { color: var(--muted); font-family: 'DM Mono', monospace; font-size: 11px; white-space: nowrap; }
+.log-msg { color: var(--text); }
+.log-wrap { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--card-radius); padding: 14px; }
+
+/* TOAST */
+.toast-container { position: fixed; top: 16px; left: 50%; transform: translateX(-50%); z-index: 1000; pointer-events: none; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.toast-msg {
+  background: var(--bg3);
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  padding: 8px 18px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: 'DM Sans', sans-serif;
+  animation: toastAnim 2.5s forwards;
+  white-space: nowrap;
+}
+@keyframes toastAnim {
+  0% { opacity: 0; transform: translateY(-10px); }
+  15% { opacity: 1; transform: translateY(0); }
+  75% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* FLOATING MONEY */
+.float-money {
+  position: fixed;
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--green);
+  pointer-events: none;
+  z-index: 999;
+  animation: floatUp 1.2s forwards;
+}
+@keyframes floatUp {
+  0% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-50px); }
+}
+
+/* SECTION HEADING */
+.section-heading {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 18px;
+  letter-spacing: 1.5px;
+  color: var(--gold);
+  margin-bottom: 10px;
+}
+.section-sub { font-size: 11px; color: var(--muted); margin-bottom: 12px; margin-top: -6px; }
+
+/* BOTTOM NAV */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 480px;
+  background: rgba(10,12,16,0.95);
+  border-top: 1px solid var(--border);
+  display: flex;
+  z-index: 100;
+  backdrop-filter: blur(10px);
+}
+.nav-btn {
+  flex: 1;
+  padding: 10px 4px 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  cursor: pointer;
+  border: none;
+  background: none;
+  color: var(--muted);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 9px;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+.nav-btn svg { width: 20px; height: 20px; }
+.nav-btn.active { color: var(--gold); }
+.nav-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--red); position: absolute; top: 8px; right: 6px; display: none; }
+.nav-btn.has-notif { position: relative; }
+.nav-btn.has-notif .nav-dot { display: block; }
+
+/* MISC */
+.empty-state { text-align: center; padding: 40px 20px; color: var(--muted); font-size: 13px; }
+.empty-state .big { font-size: 40px; margin-bottom: 10px; }
+.tip-box { background: rgba(61,142,255,0.08); border: 1px solid rgba(61,142,255,0.2); border-radius: 10px; padding: 10px 12px; font-size: 11px; color: #85B7EB; margin-bottom: 10px; }
+.divider { height: 1px; background: var(--border); margin: 12px 0; }
+</style>
+</head>
+<body>
+
+<div id="toast-container" class="toast-container"></div>
+
+<div class="game-shell">
+  <div class="header" id="header"></div>
+  <div class="tabs-wrap" id="tabs-wrap"></div>
+  <div class="panels" id="panels"></div>
+  <nav class="bottom-nav" id="bottom-nav"></nav>
+</div>
+
+<script>
+var G = {
+  money: 1000, rep: 5, level: 1, xp: 0, xpMax: 100,
+  city: 0, employees: 0, totalEarned: 0, ticks: 0,
+  log: [], activeEvent: null, eventCooldown: 0,
+  portfolio: {},
+  businesses: [
+    {name:'Street Stall', icon:'🛒', cost:500, income:2, level:0, maxLv:10, emp:2, desc:'Sell snacks & essentials', owned:false},
+    {name:'Taxi Service', icon:'🚕', cost:2000, income:8, level:0, maxLv:10, emp:4, desc:'Run a small taxi fleet', owned:false},
+    {name:'Restaurant', icon:'🍽', cost:8000, income:25, level:0, maxLv:10, emp:8, desc:'A popular dining spot', owned:false},
+    {name:'Gym', icon:'💪', cost:20000, income:60, level:0, maxLv:10, emp:6, desc:'Fitness center franchise', owned:false},
+    {name:'Tech Startup', icon:'💻', cost:60000, income:150, level:0, maxLv:10, emp:15, desc:'Build software products', owned:false},
+    {name:'Real Estate', icon:'🏢', cost:200000, income:400, level:0, maxLv:10, emp:5, desc:'Buy and rent properties', owned:false},
+    {name:'Factory', icon:'🏭', cost:700000, income:1200, level:0, maxLv:10, emp:50, desc:'Manufacturing & exports', owned:false},
+    {name:'Media Corp', icon:'📺', cost:2500000, income:4000, level:0, maxLv:10, emp:80, desc:'TV, radio & digital media', owned:false},
+    {name:'Crypto Exchange', icon:'₿', cost:8000000, income:12000, level:0, maxLv:10, emp:30, desc:'Digital asset trading platform', owned:false},
+    {name:'Bank', icon:'🏦', cost:30000000, income:40000, level:0, maxLv:10, emp:200, desc:'Your own financial institution', owned:false}
+  ],
+  stocks: [
+    {name:'TechCorp', ticker:'TCH', price:50, owned:0, base:50},
+    {name:'RealEstate Inc', ticker:'REI', price:120, owned:0, base:120},
+    {name:'CryptX', ticker:'CRX', price:200, owned:0, base:200},
+    {name:'OilCorp', ticker:'OIL', price:80, owned:0, base:80},
+    {name:'GoldMines', ticker:'GLD', price:350, owned:0, base:350},
+    {name:'PharmaCo', ticker:'PHM', price:160, owned:0, base:160}
+  ],
+  skills: [
+    {name:'Negotiation', icon:'🤝', desc:'Reduces all purchase costs by 8% per level', bonus:'cost', level:0, max:5, cost:600},
+    {name:'Finance', icon:'📈', desc:'Increases stock sell price by 15% per level', bonus:'stock', level:0, max:5, cost:900},
+    {name:'Management', icon:'👔', desc:'Increases business income by 12% per level', bonus:'income', level:0, max:5, cost:750},
+    {name:'Marketing', icon:'📣', desc:'+8 reputation per action per level', bonus:'rep', level:0, max:5, cost:500},
+    {name:'Tech Mastery', icon:'🔬', desc:'Doubles XP gained from all actions', bonus:'xp', level:0, max:5, cost:1200}
+  ],
+  cities: [
+    {name:'Mumbai', flag:'🇮🇳', bonus:1.0, cost:0, unlocked:true, pop:'21M', desc:'Your hometown — start here'},
+    {name:'Dubai', flag:'🇦🇪', bonus:1.4, cost:50000, unlocked:false, pop:'3.5M', desc:'Tax-free wealth hub'},
+    {name:'Singapore', flag:'🇸🇬', bonus:1.8, cost:250000, unlocked:false, pop:'5.8M', desc:'Asia financial capital'},
+    {name:'London', flag:'🇬🇧', bonus:2.2, cost:1000000, unlocked:false, pop:'9M', desc:'Global finance center'},
+    {name:'New York', flag:'🇺🇸', bonus:2.8, cost:5000000, unlocked:false, pop:'8.3M', desc:'The ultimate city'},
+    {name:'Private Island', flag:'🏝', bonus:3.5, cost:50000000, unlocked:false, pop:'You', desc:'Tax haven paradise'}
+  ],
+  repTitles:['Newcomer','Local Name','Rising Star','Entrepreneur','Business Mogul','Tycoon','Oligarch','Billionaire']
+};
+
+var currentTab = 'businesses';
+
+function fmt(n) {
+  n = Math.round(n);
+  if(n >= 1e12) return '$' + (n/1e12).toFixed(2) + 'T';
+  if(n >= 1e9) return '$' + (n/1e9).toFixed(2) + 'B';
+  if(n >= 1e6) return '$' + (n/1e6).toFixed(2) + 'M';
+  if(n >= 1e3) return '$' + (n/1e3).toFixed(1) + 'K';
+  return '$' + n;
+}
+function fmtNum(n) {
+  return Math.round(n).toLocaleString();
+}
+
+function getDiscount() { return 1 - G.skills[0].level * 0.08; }
+function getMgmt() { return 1 + G.skills[2].level * 0.12; }
+function getStockBonus() { return 1 + G.skills[1].level * 0.15; }
+function getRepBonus() { return G.skills[3].level * 8; }
+function getXPBonus() { return G.skills[4].level > 0 ? 2 : 1; }
+function getCityBonus() { return G.cities[G.city].bonus; }
+
+function calcIncome() {
+  var total = 0;
+  G.businesses.forEach(function(b) {
+    if(b.owned) total += b.income * Math.pow(1.6, b.level-1) * getMgmt() * getCityBonus();
+  });
+  return total;
+}
+
+function gainXP(base) {
+  var amt = base * getXPBonus();
+  G.xp += amt;
+  while(G.xp >= G.xpMax) {
+    G.xp -= G.xpMax;
+    G.level++;
+    G.xpMax = Math.round(G.xpMax * 1.6);
+    toast('🎉 Level ' + G.level + '!');
+    addLog('Reached level ' + G.level);
+    G.rep = Math.min(100, G.rep + 5);
+  }
+}
+
+function gainRep(base) {
+  G.rep = Math.min(100, G.rep + base + getRepBonus());
+}
+
+function repTitle() {
+  var i = Math.min(G.repTitles.length-1, Math.floor(G.rep / 13));
+  return G.repTitles[i];
+}
+
+function addLog(msg) {
+  var d = new Date();
+  var t = d.getHours() + ':' + String(d.getMinutes()).padStart(2,'0');
+  G.log.unshift({time: t, msg: msg});
+  if(G.log.length > 30) G.log.pop();
+}
+
+function toast(msg) {
+  var c = document.getElementById('toast-container');
+  var el = document.createElement('div');
+  el.className = 'toast-msg';
+  el.textContent = msg;
+  c.appendChild(el);
+  setTimeout(function(){ if(el.parentNode) el.parentNode.removeChild(el); }, 2600);
+}
+
+function floatMoney(amount) {
+  var el = document.createElement('div');
+  el.className = 'float-money';
+  el.textContent = '+' + fmt(amount);
+  el.style.left = (Math.random() * 60 + 20) + '%';
+  el.style.top = '120px';
+  document.body.appendChild(el);
+  setTimeout(function(){ if(el.parentNode) el.parentNode.removeChild(el); }, 1300);
+}
+
+// ---- HEADER ----
+function renderHeader() {
+  var income = calcIncome();
+  document.getElementById('header').innerHTML =
+    '<div class="header-top">'
+    + '<div class="game-title">RichMan+</div>'
+    + '<div class="level-badge"><span>LVL</span>' + G.level + '</div>'
+    + '</div>'
+    + '<div class="money-card">'
+    + '<div class="money-main" id="hdr-money">' + fmt(G.money) + '</div>'
+    + '<div class="money-sub"><span>Net worth</span><span class="inc" id="hdr-income">+' + fmt(income) + '/s</span></div>'
+    + '</div>'
+    + '<div class="stats-row">'
+    + '<div class="stat-pill"><div class="val" id="hdr-biz">' + G.businesses.filter(function(b){return b.owned;}).length + '</div><div class="lbl">Businesses</div></div>'
+    + '<div class="stat-pill"><div class="val" id="hdr-emp">' + fmtNum(G.employees) + '</div><div class="lbl">Employees</div></div>'
+    + '<div class="stat-pill"><div class="val" id="hdr-city">' + G.cities[G.city].flag + '</div><div class="lbl">' + G.cities[G.city].name + '</div></div>'
+    + '<div class="stat-pill"><div class="val" id="hdr-earned">' + fmt(G.totalEarned) + '</div><div class="lbl">Lifetime</div></div>'
+    + '</div>'
+    + '<div class="xp-wrap"><span class="xp-label">XP ' + G.level + '</span><div class="xp-bar-track"><div class="xp-bar-fill" id="hdr-xp" style="width:' + Math.min(100, G.xp/G.xpMax*100).toFixed(1) + '%;"></div></div><span class="xp-val">' + Math.round(G.xp) + '/' + G.xpMax + '</span></div>'
+    + '<div class="rep-wrap"><span class="rep-title" id="hdr-rep">' + repTitle() + '</span><div class="rep-bar-track"><div class="rep-bar-fill" id="hdr-rep-bar" style="width:' + G.rep + '%;"></div></div><span style="font-size:11px;color:var(--muted);">' + Math.round(G.rep) + '%</span></div>';
+}
+
+function updateHeader() {
+  var income = calcIncome();
+  var m = document.getElementById('hdr-money');
+  var i = document.getElementById('hdr-income');
+  var b = document.getElementById('hdr-biz');
+  var e = document.getElementById('hdr-emp');
+  var earn = document.getElementById('hdr-earned');
+  var xp = document.getElementById('hdr-xp');
+  var rep = document.getElementById('hdr-rep');
+  var repbar = document.getElementById('hdr-rep-bar');
+  if(m) m.textContent = fmt(G.money);
+  if(i) i.textContent = '+' + fmt(income) + '/s';
+  if(b) b.textContent = G.businesses.filter(function(b){return b.owned;}).length;
+  if(e) e.textContent = fmtNum(G.employees);
+  if(earn) earn.textContent = fmt(G.totalEarned);
+  if(xp) xp.style.width = Math.min(100, G.xp/G.xpMax*100).toFixed(1) + '%';
+  if(rep) rep.textContent = repTitle();
+  if(repbar) repbar.style.width = G.rep + '%';
+  var levelBadge = document.querySelector('.level-badge');
+  if(levelBadge) levelBadge.innerHTML = '<span>LVL</span>' + G.level;
+}
+
+// ---- TABS / NAV ----
+function renderTabs() {
+  var tabs = [
+    {id:'businesses', label:'Businesses'},
+    {id:'stocks', label:'Stocks'},
+    {id:'skills', label:'Skills'},
+    {id:'world', label:'World'},
+    {id:'events', label:'Events'},
+    {id:'log', label:'Log'}
+  ];
+  document.getElementById('tabs-wrap').innerHTML = tabs.map(function(t) {
+    return '<button class="tab-btn' + (currentTab===t.id?' active':'') + '" onclick="switchTab(\'' + t.id + '\')">' + t.label + '</button>';
+  }).join('');
+}
+
+function renderNav() {
+  var navItems = [
+    {id:'businesses', label:'Empire', svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 21h18M9 8h1m5 0h1M9 12h1m5 0h1M9 16h1m5 0h1M5 21V5a2 2 0 012-2h10a2 2 0 012 2v16"/></svg>'},
+    {id:'stocks', label:'Market', svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>'},
+    {id:'skills', label:'Skills', svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>'},
+    {id:'world', label:'World', svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg>'},
+    {id:'events', label:'Events', svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>'},
+    {id:'log', label:'Log', svg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>'}
+  ];
+  document.getElementById('bottom-nav').innerHTML = navItems.map(function(n) {
+    var notif = (n.id==='events' && G.activeEvent) ? ' has-notif' : '';
+    return '<button class="nav-btn' + (currentTab===n.id?' active':'') + notif + '" onclick="switchTab(\'' + n.id + '\')">'
+      + n.svg + n.label
+      + (notif ? '<div class="nav-dot"></div>' : '')
+      + '</button>';
+  }).join('');
+}
+
+function switchTab(id) {
+  currentTab = id;
+  renderTabs();
+  renderNav();
+  renderCurrentPanel();
+}
+
+function renderCurrentPanel() {
+  var el = document.getElementById('panels');
+  if(currentTab === 'businesses') el.innerHTML = buildBusinessPanel();
+  else if(currentTab === 'stocks') el.innerHTML = buildStocksPanel();
+  else if(currentTab === 'skills') el.innerHTML = buildSkillsPanel();
+  else if(currentTab === 'world') el.innerHTML = buildWorldPanel();
+  else if(currentTab === 'events') el.innerHTML = buildEventsPanel();
+  else if(currentTab === 'log') el.innerHTML = buildLogPanel();
+}
+
+// ---- BUSINESSES ----
+function buildBusinessPanel() {
+  var disc = getDiscount();
+  var html = '<div class="section-heading">Businesses</div>';
+  html += '<div class="section-sub">Income multiplier: city x' + getCityBonus().toFixed(1) + ' · mgmt x' + getMgmt().toFixed(2) + '</div>';
+  G.businesses.forEach(function(b, i) {
+    var cost = b.owned
+      ? Math.round(b.cost * Math.pow(2.2, b.level) * disc)
+      : Math.round(b.cost * disc);
+    var income = b.owned ? (b.income * Math.pow(1.6, b.level-1) * getMgmt() * getCityBonus()) : 0;
+    var pct = b.owned ? (b.level / b.maxLv * 100) : 0;
+    var btnLabel = !b.owned ? 'Buy · ' + fmt(cost)
+      : b.level >= b.maxLv ? 'MAX'
+      : 'Upgrade · ' + fmt(cost);
+    var canAfford = G.money >= cost;
+    var maxed = b.owned && b.level >= b.maxLv;
+    html += '<div class="biz-card">'
+      + '<div class="biz-head">'
+      + '<div class="biz-emoji">' + b.icon + '</div>'
+      + '<div style="flex:1;">'
+      + '<div class="biz-name">' + b.name + '</div>'
+      + (b.owned
+        ? '<div class="biz-income">+' + fmt(income) + '/s</div>'
+        : '<div class="biz-desc">' + b.desc + '</div>')
+      + '</div>'
+      + '<button class="buy-btn" onclick="buyBiz(' + i + ')" ' + (!canAfford || maxed ? 'disabled' : '') + '>' + btnLabel + '</button>'
+      + '</div>'
+      + (b.owned
+        ? '<div class="biz-bottom"><div class="prog-track"><div class="prog-fill" style="width:' + pct + '%;"></div></div><span class="lv-tag">Lv' + b.level + '/' + b.maxLv + '</span></div>'
+        : '')
+      + '</div>';
+  });
+  return html;
+}
+
+function buyBiz(i) {
+  var b = G.businesses[i];
+  var disc = getDiscount();
+  var cost = b.owned
+    ? Math.round(b.cost * Math.pow(2.2, b.level) * disc)
+    : Math.round(b.cost * disc);
+  if(G.money < cost || (b.owned && b.level >= b.maxLv)) return;
+  G.money -= cost;
+  if(!b.owned) {
+    b.owned = true; b.level = 1;
+    G.employees += b.emp;
+    toast(b.icon + ' ' + b.name + ' opened!');
+    addLog('Bought ' + b.name + ' for ' + fmt(cost));
+    gainXP(25); gainRep(4);
+  } else {
+    b.level++;
+    toast(b.name + ' → Lv' + b.level + '!');
+    addLog('Upgraded ' + b.name + ' to level ' + b.level);
+    gainXP(12); gainRep(2);
+  }
+  updateHeader();
+  renderCurrentPanel();
+}
+
+// ---- STOCKS ----
+function buildStocksPanel() {
+  var portVal = 0;
+  G.stocks.forEach(function(s){ portVal += s.owned * s.price; });
+  var html = '<div class="section-heading">Stock Market</div>';
+  html += '<div class="port-card">'
+    + '<div style="font-size:12px;color:var(--muted);margin-bottom:4px;">Portfolio value</div>'
+    + '<div style="font-size:26px;font-weight:600;font-family:\'DM Mono\',monospace;color:var(--gold);">' + fmt(portVal) + '</div>'
+    + '<div class="port-grid">'
+    + '<div class="port-stat"><div class="port-val">' + G.stocks.reduce(function(a,s){return a+s.owned;},0) + '</div><div class="port-lbl">Shares held</div></div>'
+    + '<div class="port-stat"><div class="port-val">+' + Math.round((getStockBonus()-1)*100) + '%</div><div class="port-lbl">Finance bonus</div></div>'
+    + '</div></div>';
+  html += '<div class="stock-table">';
+  G.stocks.forEach(function(s, i) {
+    var chg = ((s.price - s.base) / s.base * 100);
+    var chgStr = (chg >= 0 ? '+' : '') + chg.toFixed(1) + '%';
+    var cls = chg >= 0 ? 'up' : 'dn';
+    html += '<div class="stock-row">'
+      + '<div style="flex:1;">'
+      + '<div class="stock-name">' + s.name + '</div>'
+      + '<div class="stock-ticker">' + s.ticker + ' · Owned: ' + s.owned + '</div>'
+      + '</div>'
+      + '<div>'
+      + '<div class="stock-price">' + fmt(s.price) + '</div>'
+      + '<div class="stock-chg ' + cls + '">' + chgStr + '</div>'
+      + '</div>'
+      + '<div class="stock-btns">'
+      + '<button class="action-btn green" style="font-size:11px;padding:5px 10px;" onclick="tradeStock(' + i + ',1)" ' + (G.money < s.price ? 'disabled' : '') + '>Buy</button>'
+      + '<button class="action-btn red" style="font-size:11px;padding:5px 10px;" onclick="tradeStock(' + i + ',-1)" ' + (s.owned <= 0 ? 'disabled' : '') + '>Sell</button>'
+      + '</div>'
+      + '</div>';
+  });
+  html += '</div>';
+  return html;
+}
+
+function tradeStock(i, dir) {
+  var s = G.stocks[i];
+  if(dir === 1) {
+    if(G.money < s.price) { toast('Not enough cash!'); return; }
+    G.money -= s.price;
+    s.owned++;
+    addLog('Bought 1 ' + s.ticker + ' @ ' + fmt(s.price));
+    gainXP(6);
+  } else {
+    if(s.owned <= 0) { toast('No shares to sell!'); return; }
+    var gain = Math.round(s.price * getStockBonus());
+    G.money += gain;
+    s.owned--;
+    addLog('Sold 1 ' + s.ticker + ' @ ' + fmt(gain));
+    gainXP(6); gainRep(1);
+    floatMoney(gain);
+  }
+  updateHeader();
+  renderCurrentPanel();
+}
+
+// ---- SKILLS ----
+function buildSkillsPanel() {
+  var html = '<div class="section-heading">Skill Tree</div>';
+  html += '<div class="section-sub">Invest in yourself to grow faster</div>';
+  G.skills.forEach(function(sk, i) {
+    var cost = Math.round(sk.cost * Math.pow(2.5, sk.level));
+    var maxed = sk.level >= sk.max;
+    var dots = '';
+    for(var d = 0; d < sk.max; d++) dots += '<div class="lv-dot' + (d < sk.level ? ' filled' : '') + '"></div>';
+    html += '<div class="skill-card">'
+      + '<div class="skill-head">'
+      + '<div style="display:flex;align-items:center;gap:8px;">'
+      + '<span style="font-size:22px;">' + sk.icon + '</span>'
+      + '<div><div class="skill-name">' + sk.name + '</div><div style="font-size:10px;color:var(--purple);">Lv ' + sk.level + ' / ' + sk.max + '</div></div>'
+      + '</div>'
+      + '<button class="action-btn purple" style="font-size:11px;padding:6px 12px;" onclick="buySkill(' + i + ')" ' + (maxed || G.money < cost ? 'disabled' : '') + '>'
+      + (maxed ? 'Maxed' : fmt(cost)) + '</button>'
+      + '</div>'
+      + '<div class="skill-desc">' + sk.desc + '</div>'
+      + '<div class="skill-lv">' + dots + '</div>'
+      + '</div>';
+  });
+  return html;
+}
+
+function buySkill(i) {
+  var sk = G.skills[i];
+  var cost = Math.round(sk.cost * Math.pow(2.5, sk.level));
+  if(G.money < cost || sk.level >= sk.max) return;
+  G.money -= cost;
+  sk.level++;
+  toast(sk.icon + ' ' + sk.name + ' → Lv' + sk.level + '!');
+  addLog('Upgraded ' + sk.name + ' to level ' + sk.level);
+  gainXP(20); gainRep(3);
+  updateHeader();
+  renderCurrentPanel();
+}
+
+// ---- WORLD ----
+function buildWorldPanel() {
+  var html = '<div class="section-heading">World Expansion</div>';
+  html += '<div class="section-sub">Move to new cities for bigger income multipliers</div>';
+  G.cities.forEach(function(c, i) {
+    var active = G.city === i;
+    var btn = active
+      ? '<span class="city-badge">Current city</span>'
+      : c.unlocked
+        ? '<button class="action-btn blue" style="font-size:11px;padding:6px 12px;" onclick="moveCity(' + i + ')">Move</button>'
+        : '<button class="action-btn" style="font-size:11px;padding:6px 12px;background:var(--bg4);color:var(--muted);" onclick="unlockCity(' + i + ')" ' + (G.money < c.cost ? 'disabled' : '') + '>Unlock ' + fmt(c.cost) + '</button>';
+    html += '<div class="city-card' + (active ? ' active-city' : '') + '">'
+      + '<div class="city-flag">' + c.flag + '</div>'
+      + '<div class="city-info">'
+      + '<div class="city-name">' + c.name + '</div>'
+      + '<div class="city-bonus">Income x' + c.bonus.toFixed(1) + ' · ' + c.desc + '</div>'
+      + '</div>'
+      + btn + '</div>';
+  });
+  return html;
+}
+
+function unlockCity(i) {
+  var c = G.cities[i];
+  if(G.money < c.cost) return;
+  G.money -= c.cost;
+  c.unlocked = true;
+  toast(c.flag + ' ' + c.name + ' unlocked!');
+  addLog('Unlocked city: ' + c.name);
+  gainXP(80); gainRep(15);
+  updateHeader(); renderCurrentPanel();
+}
+
+function moveCity(i) {
+  G.city = i;
+  toast('Moved to ' + G.cities[i].flag + ' ' + G.cities[i].name + '!');
+  addLog('Relocated to ' + G.cities[i].name + ' (x' + G.cities[i].bonus + ' income)');
+  gainXP(20); gainRep(5);
+  updateHeader(); renderCurrentPanel();
+}
+
+// ---- EVENTS ----
+var EVENT_POOL = [
+  {type:'good', icon:'📈', title:'Market Boom!', desc:'Stock markets surge globally. All stock prices +40% right now!', action: function(){ G.stocks.forEach(function(s){ s.price = Math.round(s.price * 1.4); }); toast('📈 Stocks surging!'); }},
+  {type:'good', icon:'💼', title:'Government Contract', desc:'The government wants to work with you. Receive $' + fmtNum(10000) + ' instantly.', action: function(){ G.money += 10000; floatMoney(10000); toast('💼 +$10,000 contract!'); }},
+  {type:'good', icon:'🌟', title:'Viral Moment', desc:'Your business went viral on social media. Gain +20 reputation instantly.', action: function(){ G.rep = Math.min(100, G.rep + 20); toast('🌟 Viral fame!'); }},
+  {type:'good', icon:'🤝', title:'Angel Investor', desc:'A billionaire wants to invest. Receive $50,000 grant for your empire.', action: function(){ G.money += 50000; floatMoney(50000); toast('🤝 +$50,000!'); }},
+  {type:'good', icon:'🏆', title:'Business Award', desc:'You won the Best Entrepreneur award! +30 rep and +50 XP bonus.', action: function(){ G.rep = Math.min(100, G.rep + 30); gainXP(50); toast('🏆 Award winner!'); }},
+  {type:'bad', icon:'⚖️', title:'Tax Audit', desc:'Government auditors are investigating. Pay 8% of your current cash now.', action: function(){ var tax = G.money * 0.08; G.money -= tax; toast('⚖️ Lost ' + fmt(tax) + ' to taxes!'); }},
+  {type:'bad', icon:'📉', title:'Market Crash', desc:'Global recession hits. All stock prices drop by 30%.', action: function(){ G.stocks.forEach(function(s){ s.price = Math.max(10, Math.round(s.price * 0.7)); }); toast('📉 Stocks crashed!'); }},
+  {type:'bad', icon:'😤', title:'Rival Attack', desc:'A jealous competitor smeared your name in the media. Lose -15 reputation.', action: function(){ G.rep = Math.max(0, G.rep - 15); toast('😤 Reputation attacked!'); }},
+  {type:'neutral', icon:'🎲', title:'Lottery Win', desc:'A random investment paid off! Gain 5% of your net worth instantly.', action: function(){ var gain = Math.round(G.money * 0.05); G.money += gain; floatMoney(gain); toast('🎲 Lucky win! +' + fmt(gain)); }},
+  {type:'neutral', icon:'🧠', title:'Business Seminar', desc:'You attended a top MBA seminar. Gain +150 XP and +5 reputation.', action: function(){ gainXP(150); G.rep = Math.min(100, G.rep + 5); toast('🧠 Smarter now!'); }}
+];
+
+function spawnEvent() {
+  G.activeEvent = EVENT_POOL[Math.floor(Math.random() * EVENT_POOL.length)];
+  G.activeEvent = Object.assign({}, G.activeEvent);
+  toast('📢 New event: ' + G.activeEvent.title);
+  addLog('Event appeared: ' + G.activeEvent.title);
+  renderNav();
+  if(currentTab === 'events') renderCurrentPanel();
+}
+
+function buildEventsPanel() {
+  var html = '<div class="section-heading">Events</div>';
+  if(!G.activeEvent) {
+    html += '<div class="empty-state"><div class="big">📭</div>No active events right now.<br>Check back in a moment!</div>';
+    return html;
+  }
+  var ev = G.activeEvent;
+  html += '<div class="event-card ' + ev.type + '">'
+    + '<div class="event-icon">' + ev.icon + '</div>'
+    + '<div class="event-title">' + ev.title + '</div>'
+    + '<div class="event-desc">' + ev.desc + '</div>'
+    + '<div class="event-btns">'
+    + '<button class="action-btn green" onclick="resolveEvent(true)">Accept</button>'
+    + '<button class="action-btn red" onclick="resolveEvent(false)">Decline</button>'
+    + '</div></div>';
+  html += '<div class="tip-box">Tip: accepting events gives XP and reputation regardless of outcome!</div>';
+  return html;
+}
+
+function resolveEvent(accept) {
+  if(!G.activeEvent) return;
+  if(accept) {
+    G.activeEvent.action();
+    gainXP(30); gainRep(3);
+    addLog('Accepted event: ' + G.activeEvent.title);
+  } else {
+    addLog('Declined event: ' + G.activeEvent.title);
+  }
+  G.activeEvent = null;
+  G.eventCooldown = 30;
+  updateHeader();
+  renderNav();
+  renderCurrentPanel();
+}
+
+// ---- LOG ----
+function buildLogPanel() {
+  if(G.log.length === 0) return '<div class="section-heading">Activity Log</div><div class="empty-state"><div class="big">📋</div>No activity yet.<br>Start building your empire!</div>';
+  return '<div class="section-heading">Activity Log</div>'
+    + '<div class="log-wrap">'
+    + G.log.map(function(l){ return '<div class="log-entry"><span class="log-time">' + l.time + '</span><span class="log-msg">' + l.msg + '</span></div>'; }).join('')
+    + '</div>';
+}
+
+// ---- STOCK TICK ----
+function stockTick() {
+  G.stocks.forEach(function(s) {
+    var change = (Math.random() - 0.45) * 0.12;
+    s.price = Math.max(5, Math.round(s.price * (1 + change)));
+  });
+  if(currentTab === 'stocks') renderCurrentPanel();
+}
+
+// ---- MAIN GAME LOOP ----
+function gameTick() {
+  G.ticks++;
+  var income = calcIncome();
+  G.money += income;
+  G.totalEarned += income;
+  if(G.eventCooldown > 0) G.eventCooldown--;
+  if(!G.activeEvent && G.eventCooldown <= 0 && Math.random() < 0.04 && G.businesses.some(function(b){return b.owned;})) {
+    spawnEvent();
+  }
+  updateHeader();
+  if(currentTab === 'log') renderCurrentPanel();
+}
+
+// ---- INIT ----
+function init() {
+  renderHeader();
+  renderTabs();
+  renderNav();
+  renderCurrentPanel();
+  addLog('Game started — build your empire!');
+  setInterval(gameTick, 1000);
+  setInterval(stockTick, 4000);
+}
+init();
+</script>
+</body>
+</html>
